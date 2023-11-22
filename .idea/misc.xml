@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/Examples/ROS/ORB_SLAM3/build" />
+      <file path="$PROJECT_DIR$/Thirdparty/DBoW2/build" />
+      <file path="$PROJECT_DIR$/Thirdparty/g2o/build" />
+      <file path="$PROJECT_DIR$/build" />
+    </excludeRoots>
+  </component>
+</project>

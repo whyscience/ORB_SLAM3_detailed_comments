@@ -75,7 +75,6 @@ cmake-build-debug/
 *.pyc
 *.osa
 .vscode/settings.json
-/.idea/
 /Examples/Calibration/recorder_realsense_D435i
 /Examples/Calibration/recorder_realsense_T265
 /Examples/Monocular/mono_realsense_D435i
