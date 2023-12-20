@@ -1357,7 +1357,7 @@ void Frame::ComputeStereoMatches()
     }
 }
 
-// 计算RGBD图像的立体深度信息
+// 计算RGBD图像的立体深度信息 //RGBD相机
 void Frame::ComputeStereoFromRGBD(const cv::Mat &imDepth)
 {
     /** 主要步骤如下:.对于彩色图像中的每一个特征点:<ul>  */
@@ -1379,7 +1379,7 @@ void Frame::ComputeStereoFromRGBD(const cv::Mat &imDepth)
 
         // 从深度图像中获取这个特征点对应的深度点
         // NOTE 从这里看对深度图像进行去畸变处理是没有必要的,我们依旧可以直接通过未矫正的特征点的坐标来直接拿到深度数据
-        const float d = imDepth.at<float>(v,u);
+        const float d = imDepth.at<float>(v,u);//直接获取深度 不需要特征点匹配
 
         // 如果获取到的深度点合法(d>0), 那么就保存这个特征点的深度,并且计算出等效的\在假想的右图中该特征点所匹配的特征点的横坐标
         if(d>0)

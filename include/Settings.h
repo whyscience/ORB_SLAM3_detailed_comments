@@ -229,7 +229,7 @@ namespace ORB_SLAM3 {
         float thFarPoints_;
 
     };
-};
+}
 
 
 #endif //ORB_SLAM3_SETTINGS_H

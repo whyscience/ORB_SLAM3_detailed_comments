@@ -187,7 +187,7 @@ public:
   void computeError()  {
     const VertexSE3Expmap* v1 = static_cast<const VertexSE3Expmap*>(_vertices[0]);
     Vector2d obs(_measurement);
-    _error = obs-cam_project(v1->estimate().map(Xw));
+    _error = obs-cam_project(v1->estimate().map(Xw));//计算误差
   }
 
   bool isDepthPositive() {

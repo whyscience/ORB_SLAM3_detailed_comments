@@ -138,7 +138,7 @@ int Optimizer::PoseOptimization(Frame *pFrame)
 
                         e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex *>(optimizer.vertex(0)));
                         e->setMeasurement(obs);
-                        // 这个点的可信程度和特征点所在的图层有关，层数约高invSigma2越小，信息矩阵越小，表示误差越大，优化时考虑的比较少
+                        // 这个点的可信程度和特征点所在的图层有关，层数越高，invSigma2越小，信息矩阵越小，表示误差越大，优化时考虑的比较少
                         const float invSigma2 = pFrame->mvInvLevelSigma2[kpUn.octave];
                         e->setInformation(Eigen::Matrix2d::Identity() * invSigma2);
                         // 在这里使用了鲁棒核函数
@@ -902,9 +902,9 @@ int Optimizer::PoseInertialOptimizationLastKeyFrame(Frame *pFrame, bool bRecInit
     // ei ei ei ei ei ei ei ei ei   0      0     0    0     0    0
     // ei ei ei ei ei ei ei ei ei   0      0     0    0     0    0
     // ei ei ei ei ei ei ei ei ei   0      0     0    0     0    0
-    // 0  0  0  0  0  0  0   0  0  egr egr egr  0     0     0
-    // 0  0  0  0  0  0  0   0  0  egr egr egr  0     0     0
-    // 0  0  0  0  0  0  0   0  0  egr egr egr  0     0     0
+    // 0  0  0  0  0  0  0   0  0  egr    egr   egr  0     0     0
+    // 0  0  0  0  0  0  0   0  0  egr    egr   egr  0     0     0
+    // 0  0  0  0  0  0  0   0  0  egr    egr   egr  0     0     0
     // 0  0  0  0  0  0  0   0  0    0     0      0  ear ear ear
     // 0  0  0  0  0  0  0   0  0    0     0      0  ear ear ear
     // 0  0  0  0  0  0  0   0  0    0     0      0  ear ear ear
@@ -2421,7 +2421,7 @@ void Optimizer::LocalInertialBA(
         }
     }
 
-    // Create intertial constraints
+    // Create inertial constraints
     // 暂时没看到有什么用
     vector<EdgeInertial *> vei(N, (EdgeInertial *)NULL);
     vector<EdgeGyroRW *> vegr(N, (EdgeGyroRW *)NULL);
@@ -2439,11 +2439,11 @@ void Optimizer::LocalInertialBA(
         if (pKFi->bImu && pKFi->mPrevKF->bImu && pKFi->mpImuPreintegrated)
         {
             pKFi->mpImuPreintegrated->SetNewBias(pKFi->mPrevKF->GetImuBias());
-            g2o::HyperGraph::Vertex *VP1 = optimizer.vertex(pKFi->mPrevKF->mnId);
+            g2o::HyperGraph::Vertex *VP1 = optimizer.vertex(pKFi->mPrevKF->mnId);//上一关键帧的位姿节点
             g2o::HyperGraph::Vertex *VV1 = optimizer.vertex(maxKFid + 3 * (pKFi->mPrevKF->mnId) + 1);
             g2o::HyperGraph::Vertex *VG1 = optimizer.vertex(maxKFid + 3 * (pKFi->mPrevKF->mnId) + 2);
             g2o::HyperGraph::Vertex *VA1 = optimizer.vertex(maxKFid + 3 * (pKFi->mPrevKF->mnId) + 3);
-            g2o::HyperGraph::Vertex *VP2 = optimizer.vertex(pKFi->mnId);
+            g2o::HyperGraph::Vertex *VP2 = optimizer.vertex(pKFi->mnId);//关键帧的位姿节点
             g2o::HyperGraph::Vertex *VV2 = optimizer.vertex(maxKFid + 3 * (pKFi->mnId) + 1);
             g2o::HyperGraph::Vertex *VG2 = optimizer.vertex(maxKFid + 3 * (pKFi->mnId) + 2);
             g2o::HyperGraph::Vertex *VA2 = optimizer.vertex(maxKFid + 3 * (pKFi->mnId) + 3);
@@ -2478,8 +2478,10 @@ void Optimizer::LocalInertialBA(
                     vei[i]->setInformation(vei[i]->information() * 1e-2);
                 rki->setDelta(sqrt(16.92));
             }
+            //但在ORB-SLAM3中，通过IMU“弥补”了这种时间上的“割裂”。最后将边放到优化图中，同时我们也新建了个vector类型的vei存储这些边。
             optimizer.addEdge(vei[i]);
 
+            //陀螺仪偏置边连接了上一个关键帧的陀螺仪偏置节点VG1和当前迭代关键帧陀螺仪偏置节点VG2 这也是ORB-SLAM2中没有的。
             vegr[i] = new EdgeGyroRW();
             vegr[i]->setVertex(0, VG1);
             vegr[i]->setVertex(1, VG2);
@@ -2752,6 +2754,7 @@ void Optimizer::LocalInertialBA(
     // 15. 取出结果
     // Recover optimized data
     // Local temporal Keyframes
+    // 时序关键帧
     N = vpOptimizableKFs.size();
     for (int i = 0; i < N; i++)
     {
@@ -2775,7 +2778,7 @@ void Optimizer::LocalInertialBA(
     }
 
     // Local visual KeyFrame
-    // 空
+    // 局部共视关键帧
     for (list<KeyFrame *>::iterator it = lpOptVisKFs.begin(), itEnd = lpOptVisKFs.end(); it != itEnd; it++)
     {
         KeyFrame *pKFi = *it;

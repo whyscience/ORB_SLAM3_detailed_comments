@@ -242,3 +242,6 @@ A flag in `include\Config.h` activates time measurements. It is necessary to unc
 
 # 9. Calibration
 You can find a tutorial for visual-inertial calibration and a detailed description of the contents of valid configuration files at  `Calibration_Tutorial.pdf`
+
+、+ '[' xIBIS45277 -eq x ']'
+installwg.sh: line 60: [: xIBIS45277: integer expression expected
