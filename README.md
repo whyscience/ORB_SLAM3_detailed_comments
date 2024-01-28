@@ -68,6 +68,32 @@ We use the new thread and chrono functionalities of C++11.
 ## Pangolin
 We use [Pangolin](https://github.com/stevenlovegrove/Pangolin) for visualization and user interface. Dowload and install instructions can be found at: https://github.com/stevenlovegrove/Pangolin.
 
+https://www.jianshu.com/p/fc61bf01a3d9 
+```bash
+git clone https://github.com/stevenlovegrove/Pangolin.git
+#cd Pangolin
+
+# 下载pybind11等库
+cd Pangolin && git submodule init && git submodule update
+
+# 安装系统依赖  \ 表示续行，可直接复制粘贴
+sudo apt install cmake pkg-config libeigen3-dev \
+                 libgl1-mesa-dev libglew-dev libegl1-mesa-dev \
+                 libwayland-dev libxkbcommon-dev wayland-protocols \
+                 ffmpeg libavcodec-dev libavutil-dev libavformat-dev \
+                 libswscale-dev libavdevice-dev libdc1394-22-dev \
+                 libraw1394-dev libjpeg-dev libpng12-dev \
+                 libtiff5-dev libopenexr-dev
+# 安装附加python依赖
+sudo python3 -m pip install numpy pyopengl Pillow pybind11
+
+mkdir build
+cd build
+#cmake -DCPP11_NO_BOOST=1 ..
+cmake ..
+make -j4
+```
+
 ## OpenCV
 We use [OpenCV](http://opencv.org) to manipulate images and features. Dowload and install instructions can be found at: http://opencv.org. **Required at leat 3.0. Tested with OpenCV 3.2.0 and 4.4.0**.
 
