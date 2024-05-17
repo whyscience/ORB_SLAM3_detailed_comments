@@ -81,8 +81,8 @@ sudo apt install cmake pkg-config libeigen3-dev \
                  libgl1-mesa-dev libglew-dev libegl1-mesa-dev \
                  libwayland-dev libxkbcommon-dev wayland-protocols \
                  ffmpeg libavcodec-dev libavutil-dev libavformat-dev \
-                 libswscale-dev libavdevice-dev libdc1394-22-dev \
-                 libraw1394-dev libjpeg-dev libpng12-dev \
+                 libswscale-dev libavdevice-dev \
+                 libraw1394-dev libjpeg-dev \
                  libtiff5-dev libopenexr-dev
 # 安装附加python依赖
 sudo python3 -m pip install numpy pyopengl Pillow pybind11
