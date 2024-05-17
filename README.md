@@ -132,7 +132,7 @@ This will create **libORB_SLAM3.so**  at *lib* folder and the executables in *Ex
 
 # 4. Running ORB-SLAM3 with your camera
 
-Directory `Examples` contains several demo programs and calibration files to run ORB-SLAM3 in all sensor configurations with Intel Realsense cameras T265 and D435i. The steps needed to use your own camera are: 
+Directory `Examples` contains several demo programs and calibration files to run ORB-SLAM3 in all sensor configurations with Intel Realsense cameras T265 and D435i. The steps needed to use your own camera are:
 
 1. Calibrate your camera following `Calibration_Tutorial.pdf` and write your calibration file `your_camera.yaml`
 
