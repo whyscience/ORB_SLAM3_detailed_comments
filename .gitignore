@@ -109,3 +109,4 @@ cmake-build-debug/
 /Examples_old/Stereo-Inertial/stereo_inertial_realsense_D435i_old
 /Examples_old/Stereo-Inertial/stereo_inertial_realsense_t265_old
 /Examples_old/Stereo-Inertial/stereo_inertial_tum_vi_old
+/.idea/editor.xml
