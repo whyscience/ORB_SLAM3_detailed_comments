@@ -54,6 +54,7 @@
 
 namespace ORB_SLAM3
 {
+
 class PnPsolver {
  public:
   PnPsolver(const Frame &F, const vector<MapPoint*> &vpMapPointMatches);
