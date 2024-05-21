@@ -35,9 +35,9 @@ cd Vocabulary
 tar -xf ORBvoc.txt.tar.gz
 cd ..
 
-echo "Configuring and building ORB_SLAM3 ..."
+#echo "Configuring and building ORB_SLAM3 ..."
 
-mkdir build -p
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j${proc_n}
+#mkdir build -p
+#cd build
+#cmake .. -DCMAKE_BUILD_TYPE=Release
+#make -j${proc_n}
