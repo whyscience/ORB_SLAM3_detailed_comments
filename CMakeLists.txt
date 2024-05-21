@@ -15,10 +15,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
 # Check C++14 support
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+# CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
 if (COMPILER_SUPPORTS_CXX14)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-    add_definitions(-DCOMPILEDWITHC14)
+    #add_definitions(-DCOMPILEDWITHC14)
     #为了解决编译问题，还是给C++11的标志，源代码中只判断是否为C++11
     add_definitions(-DCOMPILEDWITHC11)
     message(STATUS "Using flag -std=c++14.")
