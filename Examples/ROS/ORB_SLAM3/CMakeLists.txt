@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.5)
 project(ORB_SLAM3_ROS)
 include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 

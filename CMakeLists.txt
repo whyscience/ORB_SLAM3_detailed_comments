@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.5)
 project(ORB_SLAM3)
 
 IF (NOT CMAKE_BUILD_TYPE)
@@ -111,6 +111,9 @@ add_library(${PROJECT_NAME} SHARED
         include/SerializationUtils.h
         include/Config.h
         include/Settings.h)
+
+# 一定不能删除这一行！！！
+add_subdirectory(Thirdparty/g2o)
 
 target_link_libraries(${PROJECT_NAME}
         ${OpenCV_LIBS}
