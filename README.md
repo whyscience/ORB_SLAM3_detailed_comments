@@ -92,6 +92,7 @@ cd build
 #cmake -DCPP11_NO_BOOST=1 ..
 cmake ..
 make -j4
+sudo ldconfig
 ```
 
 ## OpenCV
