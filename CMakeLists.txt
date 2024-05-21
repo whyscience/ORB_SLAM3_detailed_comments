@@ -8,16 +8,16 @@ ENDIF ()
 MESSAGE("Build type: " ${CMAKE_BUILD_TYPE})
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3 -Wno-deprecated-declarations")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wno-deprecated-declarations -Wno-deprecated -Wno-conversion-null")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wno-deprecated-declarations -Wno-deprecated -Wno-conversion-null -Wno-aggressive-loop-optimizations")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -march=native")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -march=native")
 
 # Check C++14 support
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
 if (COMPILER_SUPPORTS_CXX14)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-    add_definitions(-DCOMPILEDWITHC14)
     #为了解决编译问题，还是给C++11的标志，源代码中只判断是否为C++11
     add_definitions(-DCOMPILEDWITHC11)
     message(STATUS "Using flag -std=c++14.")
@@ -34,8 +34,7 @@ if (NOT OpenCV_FOUND)
     message(FATAL_ERROR "OpenCV > 4.2 not found.")
 endif ()
 
-MESSAGE("OPENCV VERSION:")
-MESSAGE(${OpenCV_VERSION})
+MESSAGE("OPENCV VERSION: ${OpenCV_VERSION}")
 
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
@@ -111,8 +110,6 @@ add_library(${PROJECT_NAME} SHARED
         include/SerializationUtils.h
         include/Config.h
         include/Settings.h)
-
-add_subdirectory(Thirdparty/g2o)
 
 target_link_libraries(${PROJECT_NAME}
         ${OpenCV_LIBS}
