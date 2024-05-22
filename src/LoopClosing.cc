@@ -2900,7 +2900,7 @@ void LoopClosing::RunGlobalBundleAdjustment(Map* pActiveMap, unsigned long nLoop
     }
 #endif
     // 记录GBA已经迭代次数,用来检查全局BA过程是否是因为意外结束的
-    int idx =  mnFullBAIdx;
+    int idx = mnFullBAIdx;
     // Optimizer::GlobalBundleAdjustemnt(mpMap,10,&mbStopGBA,nLoopKF,false);
 
     // Update all MapPoints and KeyFrames

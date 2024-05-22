@@ -3267,7 +3267,7 @@ void Optimizer::FullInertialBA(
 
     // 2. 设置关键帧与偏置节点
     // Set KeyFrame vertices
-    KeyFrame *pIncKF;  // vpKFs中最后一个id符合要求的关键帧
+    KeyFrame *pIncKF = nullptr;  // vpKFs中最后一个id符合要求的关键帧
     for (size_t i = 0; i < vpKFs.size(); i++)
     {
         KeyFrame *pKFi = vpKFs[i];
@@ -3350,10 +3350,10 @@ void Optimizer::FullInertialBA(
                 g2o::HyperGraph::Vertex *VP1 = optimizer.vertex(pKFi->mPrevKF->mnId);
                 g2o::HyperGraph::Vertex *VV1 = optimizer.vertex(maxKFid + 3 * (pKFi->mPrevKF->mnId) + 1);
 
-                g2o::HyperGraph::Vertex *VG1;
-                g2o::HyperGraph::Vertex *VA1;
-                g2o::HyperGraph::Vertex *VG2;
-                g2o::HyperGraph::Vertex *VA2;
+                g2o::HyperGraph::Vertex *VG1 = nullptr;
+                g2o::HyperGraph::Vertex *VA1 = nullptr;
+                g2o::HyperGraph::Vertex *VG2 = nullptr;
+                g2o::HyperGraph::Vertex *VA2 = nullptr;
                 // 根据不同输入配置相应的偏置节点
                 if (!bInit)
                 {
@@ -4858,7 +4858,7 @@ void Optimizer::OptimizeEssentialGraph4DoF(
     const LoopClosing::KeyFrameAndPose &CorrectedSim3,
     const map<KeyFrame *, set<KeyFrame *>> &LoopConnections)
 {
-    typedef g2o::BlockSolver<g2o::BlockSolverTraits<4, 4>> BlockSolver_4_4;
+    //typedef g2o::BlockSolver<g2o::BlockSolverTraits<4, 4>> BlockSolver_4_4;
 
     // Setup optimizer
     // 1. 构建优化器
@@ -6143,19 +6143,18 @@ void Optimizer::MergeInertialBA(
         {
             // Using mnBALocalForKF we avoid redundance here, one MP can not be added several times to lLocalMapPoints
             MapPoint *pMP = *vit;
-            if (pMP)
-                if (!pMP->isBad())
+            if (pMP) {
+                if (!pMP->isBad()) {
                     // 用这个变量记录是否重复添加
-                    if (pMP->mnBALocalForKF != pCurrKF->mnId)
-                    {
+                    if (pMP->mnBALocalForKF != pCurrKF->mnId) {
                         mLocalObs[pMP] = 1;
                         lLocalMapPoints.push_back(pMP);
-                        pMP->mnBALocalForKF = pCurrKF->mnId;  // 防止重复添加
-                    }
-                    else
-                    {
+                        pMP->mnBALocalForKF = pCurrKF->mnId; // 防止重复添加
+                    } else {
                         mLocalObs[pMP]++;
                     }
+                }
+            }
         }
     }
 

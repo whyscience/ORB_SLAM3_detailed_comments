@@ -664,7 +664,7 @@ bool Tracking::ParseCamParamFile(cv::FileStorage &fSettings)
     string sCameraName = fSettings["Camera.type"];
     if(sCameraName == "PinHole")
     {
-        float fx, fy, cx, cy;
+        float fx{}, fy{}, cx{}, cy{};
         mImageScale = 1.f;
 
         // Camera calibration parameters
@@ -820,8 +820,8 @@ bool Tracking::ParseCamParamFile(cv::FileStorage &fSettings)
     }
     else if(sCameraName == "KannalaBrandt8")
     {
-        float fx, fy, cx, cy;
-        float k1, k2, k3, k4;
+        float fx{}, fy{}, cx{}, cy{};
+        float k1{}, k2{}, k3{}, k4{};
         mImageScale = 1.f;
 
         // Camera calibration parameters
@@ -1260,8 +1260,8 @@ bool Tracking::ParseCamParamFile(cv::FileStorage &fSettings)
 bool Tracking::ParseORBParamFile(cv::FileStorage &fSettings)
 {
     bool b_miss_params = false;
-    int nFeatures, nLevels, fIniThFAST, fMinThFAST;
-    float fScaleFactor;
+    int nFeatures{}, nLevels{}, fIniThFAST{}, fMinThFAST{};
+    float fScaleFactor{};
 
     cv::FileNode node = fSettings["ORBextractor.nFeatures"];
     if(!node.empty() && node.isInt())
@@ -1380,9 +1380,7 @@ bool Tracking::ParseIMUParamFile(cv::FileStorage &fSettings)
     if(!mInsertKFsLost)
         cout << "Do not insert keyframes when lost visual tracking " << endl;
 
-
-
-    float Ng, Na, Ngw, Naw;
+    float Ng{}, Na{}, Ngw{}, Naw{};
 
     node = fSettings["IMU.Frequency"];
     if(!node.empty() && node.isInt())
@@ -2122,7 +2120,7 @@ void Tracking::Track()
     {
         // System is initialized. Track Frame.
         // Step 6 系统成功初始化，下面是具体跟踪过程
-        bool bOK;
+        bool bOK{};
 
 #ifdef REGISTER_TIMES
         std::chrono::steady_clock::time_point time_StartPosePred = std::chrono::steady_clock::now();
@@ -2772,7 +2770,7 @@ void Tracking::StereoInitialization()
             }
         }
 
-        Verbose::PrintMess("New Map created with " + to_string(mpAtlas->MapPointsInMap()) + " points", Verbose::VERBOSITY_QUIET);
+        Verbose::PrintMess("Stereo New Map created with " + to_string(mpAtlas->MapPointsInMap()) + " points", Verbose::VERBOSITY_QUIET);
 
         //cout << "Active map: " << mpAtlas->GetCurrentMap()->GetId() << endl;
         // 在局部地图中添加该初始关键帧
@@ -2992,7 +2990,7 @@ void Tracking::CreateInitialMapMonocular()
 
     // Bundle Adjustment
     // Step 4 全局BA优化，同时优化所有位姿和三维点
-    Verbose::PrintMess("New Map created with " + to_string(mpAtlas->MapPointsInMap()) + " points", Verbose::VERBOSITY_QUIET);
+    Verbose::PrintMess("Mono New Map created with " + to_string(mpAtlas->MapPointsInMap()) + " points", Verbose::VERBOSITY_QUIET);
     Optimizer::GlobalBundleAdjustemnt(mpAtlas->GetCurrentMap(),20);
 
     // Step 5 取场景的中值深度，用于尺度归一化 
