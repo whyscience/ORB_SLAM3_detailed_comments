@@ -55,12 +55,12 @@ class Frame
 public:
     Frame();
 
-    Frame& operator=(const Frame& other) {
+    /*Frame& operator=(const Frame& other) {
         if (this != &other) {
             // 拷贝每个成员变量
         }
         return *this;
-    }
+    }*/
 
     // Copy constructor.
     Frame(const Frame &frame);
