@@ -19,8 +19,8 @@
 #ifndef TwoViewReconstruction_H
 #define TwoViewReconstruction_H
 
-#include <opencv2/opencv.hpp>
 #include <Eigen/Core>
+#include <opencv2/opencv.hpp>
 #include <unordered_set>
 
 #include <sophus/se3.hpp>
@@ -30,20 +30,19 @@ namespace ORB_SLAM3
 
     class TwoViewReconstruction
     {
-        typedef std::pair<int,int> Match;
+        typedef std::pair<int, int> Match;
 
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         // Fix the reference frame
-        TwoViewReconstruction(const Eigen::Matrix3f& k, float sigma = 1.0, int iterations = 200);
+        TwoViewReconstruction(const Eigen::Matrix3f &k, float sigma = 1.0, int iterations = 200);
 
         // Computes in parallel a fundamental matrix and a homography
         // Selects a model and tries to recover the motion and the structure from motion
-        bool Reconstruct(const std::vector<cv::KeyPoint>& vKeys1, const std::vector<cv::KeyPoint>& vKeys2, const std::vector<int> &vMatches12,
-                          Sophus::SE3f &T21, std::vector<cv::Point3f> &vP3D, std::vector<bool> &vbTriangulated);
+        bool Reconstruct(const std::vector<cv::KeyPoint> &vKeys1, const std::vector<cv::KeyPoint> &vKeys2, const std::vector<int> &vMatches12,
+                         Sophus::SE3f &T21, std::vector<cv::Point3f> &vP3D, std::vector<bool> &vbTriangulated);
 
     private:
-
         void FindHomography(std::vector<bool> &vbMatchesInliers, float &score, Eigen::Matrix3f &H21);
         void FindFundamental(std::vector<bool> &vbInliers, float &score, Eigen::Matrix3f &F21);
 
@@ -58,7 +57,7 @@ namespace ORB_SLAM3
                           Sophus::SE3f &T21, std::vector<cv::Point3f> &vP3D, std::vector<bool> &vbTriangulated, float minParallax, int minTriangulated);
 
         bool ReconstructH(std::vector<bool> &vbMatchesInliers, Eigen::Matrix3f &H21, Eigen::Matrix3f &K,
-                          Sophus::SE3f &T21, std::vector<cv::Point3f> &vP3D,std:: vector<bool> &vbTriangulated, float minParallax, int minTriangulated);
+                          Sophus::SE3f &T21, std::vector<cv::Point3f> &vP3D, std::vector<bool> &vbTriangulated, float minParallax, int minTriangulated);
 
         void Normalize(const std::vector<cv::KeyPoint> &vKeys, std::vector<cv::Point2f> &vNormalizedPoints, Eigen::Matrix3f &T);
 
@@ -90,10 +89,9 @@ namespace ORB_SLAM3
         int mMaxIterations;
 
         // Ransac sets
-        std::vector<std::vector<size_t> > mvSets;
-
+        std::vector<std::vector<size_t>> mvSets;
     };
 
-} //namespace ORB_SLAM
+}// namespace ORB_SLAM3
 
-#endif // TwoViewReconstruction_H
+#endif// TwoViewReconstruction_H

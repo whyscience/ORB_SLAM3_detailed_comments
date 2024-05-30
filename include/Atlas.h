@@ -19,156 +19,155 @@
 #ifndef ATLAS_H
 #define ATLAS_H
 
+#include "GeometricCamera.h"
+#include "KannalaBrandt8.h"
+#include "KeyFrame.h"
 #include "Map.h"
 #include "MapPoint.h"
-#include "KeyFrame.h"
-#include "GeometricCamera.h"
 #include "Pinhole.h"
-#include "KannalaBrandt8.h"
 
-#include <set>
-#include <mutex>
-#include <boost/serialization/vector.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/serialization/vector.hpp>
+#include <mutex>
+#include <set>
 
 
 namespace ORB_SLAM3
 {
-class Viewer;
-class Map;
-class MapPoint;
-class KeyFrame;
-class KeyFrameDatabase;
-class Frame;
-class KannalaBrandt8;
-class Pinhole;
+    class Viewer;
+    class Map;
+    class MapPoint;
+    class KeyFrame;
+    class KeyFrameDatabase;
+    class Frame;
+    class KannalaBrandt8;
+    class Pinhole;
 
-//BOOST_CLASS_EXPORT_GUID(Pinhole, "Pinhole")
-//BOOST_CLASS_EXPORT_GUID(KannalaBrandt8, "KannalaBrandt8")
+    //BOOST_CLASS_EXPORT_GUID(Pinhole, "Pinhole")
+    //BOOST_CLASS_EXPORT_GUID(KannalaBrandt8, "KannalaBrandt8")
 
-class Atlas
-{
-    // 1. 对boost声明友元，boost就能调用Atlas的serialize了
-    friend class boost::serialization::access;
-
-    // 保存读取都用这个
-    template<class Archive>
-    void serialize(Archive &ar, const unsigned int version)
+    class Atlas
     {
-        // 由于保存相机是基类，但是实际使用是派生类，所以声明一下
-        ar.template register_type<Pinhole>();
-        ar.template register_type<KannalaBrandt8>();
+        // 1. 对boost声明友元，boost就能调用Atlas的serialize了
+        friend class boost::serialization::access;
 
-        // Save/load a set structure, the set structure is broken in libboost 1.58 for ubuntu 16.04, a vector is serializated
-        //ar & mspMaps;
-        // 基础类型不用管，但是自定义的类里面要进一步写serialize函数，确定保存内容
-        ar & mvpBackupMaps;
-        ar & mvpCameras;
-        // Need to save/load the static Id from Frame, KeyFrame, MapPoint and Map
-        ar & Map::nNextId;
-        ar & Frame::nNextId;
-        ar & KeyFrame::nNextId;
-        ar & MapPoint::nNextId;
-        ar & GeometricCamera::nNextId;
-        ar & mnLastInitKFidMap;
-    }
+        // 保存读取都用这个
+        template<class Archive>
+        void serialize(Archive &ar, const unsigned int version)
+        {
+            // 由于保存相机是基类，但是实际使用是派生类，所以声明一下
+            ar.template register_type<Pinhole>();
+            ar.template register_type<KannalaBrandt8>();
 
-public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+            // Save/load a set structure, the set structure is broken in libboost 1.58 for ubuntu 16.04, a vector is serializated
+            //ar & mspMaps;
+            // 基础类型不用管，但是自定义的类里面要进一步写serialize函数，确定保存内容
+            ar & mvpBackupMaps;
+            ar & mvpCameras;
+            // Need to save/load the static Id from Frame, KeyFrame, MapPoint and Map
+            ar &Map::nNextId;
+            ar &Frame::nNextId;
+            ar &KeyFrame::nNextId;
+            ar &MapPoint::nNextId;
+            ar &GeometricCamera::nNextId;
+            ar & mnLastInitKFidMap;
+        }
 
-    Atlas();
-    Atlas(int initKFid); // When its initialization the first map is created
-    ~Atlas();
+    public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    void CreateNewMap();
-    void ChangeMap(Map* pMap);
+        Atlas();
+        Atlas(int initKFid);// When its initialization the first map is created
+        ~Atlas();
 
-    unsigned long int GetLastInitKFid();
+        void CreateNewMap();
+        void ChangeMap(Map *pMap);
 
-    void SetViewer(Viewer* pViewer);
+        unsigned long int GetLastInitKFid();
 
-    // Method for change components in the current map
-    void AddKeyFrame(KeyFrame* pKF);
-    void AddMapPoint(MapPoint* pMP);
-    //void EraseMapPoint(MapPoint* pMP);
-    //void EraseKeyFrame(KeyFrame* pKF);
+        void SetViewer(Viewer *pViewer);
 
-    GeometricCamera* AddCamera(GeometricCamera* pCam);
-    std::vector<GeometricCamera*> GetAllCameras();
+        // Method for change components in the current map
+        void AddKeyFrame(KeyFrame *pKF);
+        void AddMapPoint(MapPoint *pMP);
+        //void EraseMapPoint(MapPoint* pMP);
+        //void EraseKeyFrame(KeyFrame* pKF);
 
-    /* All methods without Map pointer work on current map */
-    void SetReferenceMapPoints(const std::vector<MapPoint*> &vpMPs);
-    void InformNewBigChange();
-    int GetLastBigChangeIdx();
+        GeometricCamera *AddCamera(GeometricCamera *pCam);
+        std::vector<GeometricCamera *> GetAllCameras();
 
-    long unsigned int MapPointsInMap();
-    long unsigned KeyFramesInMap();
+        /* All methods without Map pointer work on current map */
+        void SetReferenceMapPoints(const std::vector<MapPoint *> &vpMPs);
+        void InformNewBigChange();
+        int GetLastBigChangeIdx();
 
-    // Method for get data in current map
-    std::vector<KeyFrame*> GetAllKeyFrames();
-    std::vector<MapPoint*> GetAllMapPoints();
-    std::vector<MapPoint*> GetReferenceMapPoints();
+        long unsigned int MapPointsInMap();
+        long unsigned KeyFramesInMap();
 
-    vector<Map*> GetAllMaps();
+        // Method for get data in current map
+        std::vector<KeyFrame *> GetAllKeyFrames();
+        std::vector<MapPoint *> GetAllMapPoints();
+        std::vector<MapPoint *> GetReferenceMapPoints();
 
-    int CountMaps();
+        vector<Map *> GetAllMaps();
 
-    void clearMap();
+        int CountMaps();
 
-    void clearAtlas();
+        void clearMap();
 
-    Map* GetCurrentMap();
+        void clearAtlas();
 
-    void SetMapBad(Map* pMap);
-    void RemoveBadMaps();
+        Map *GetCurrentMap();
 
-    bool isInertial();
-    void SetInertialSensor();
-    void SetImuInitialized();
-    bool isImuInitialized();
+        void SetMapBad(Map *pMap);
+        void RemoveBadMaps();
 
-    // Function for garantee the correction of serialization of this object
-    void PreSave();
-    void PostLoad();
+        bool isInertial();
+        void SetInertialSensor();
+        void SetImuInitialized();
+        bool isImuInitialized();
 
-    map<long unsigned int, KeyFrame*> GetAtlasKeyframes();
+        // Function for garantee the correction of serialization of this object
+        void PreSave();
+        void PostLoad();
 
-    void SetKeyFrameDababase(KeyFrameDatabase* pKFDB);
-    KeyFrameDatabase* GetKeyFrameDatabase();
+        map<long unsigned int, KeyFrame *> GetAtlasKeyframes();
 
-    void SetORBVocabulary(ORBVocabulary* pORBVoc);
-    ORBVocabulary* GetORBVocabulary();
+        void SetKeyFrameDababase(KeyFrameDatabase *pKFDB);
+        KeyFrameDatabase *GetKeyFrameDatabase();
 
-    long unsigned int GetNumLivedKF();
+        void SetORBVocabulary(ORBVocabulary *pORBVoc);
+        ORBVocabulary *GetORBVocabulary();
 
-    long unsigned int GetNumLivedMP();
+        long unsigned int GetNumLivedKF();
 
-protected:
+        long unsigned int GetNumLivedMP();
 
-    std::set<Map*> mspMaps;
-    std::set<Map*> mspBadMaps;
-    // Its necessary change the container from set to vector because libboost 1.58 and Ubuntu 16.04 have an error with this cointainer
-    std::vector<Map*> mvpBackupMaps;
+    protected:
+        std::set<Map *> mspMaps;
+        std::set<Map *> mspBadMaps;
+        // Its necessary change the container from set to vector because libboost 1.58 and Ubuntu 16.04 have an error with this cointainer
+        std::vector<Map *> mvpBackupMaps;
 
-    Map* mpCurrentMap;
+        Map *mpCurrentMap;
 
-    std::vector<GeometricCamera*> mvpCameras;
+        std::vector<GeometricCamera *> mvpCameras;
 
-    unsigned long int mnLastInitKFidMap;
+        unsigned long int mnLastInitKFidMap;
 
-    Viewer* mpViewer;
-    bool mHasViewer;
+        Viewer *mpViewer;
+        bool mHasViewer;
 
-    // Class references for the map reconstruction from the save file
-    KeyFrameDatabase* mpKeyFrameDB;
-    ORBVocabulary* mpORBVocabulary;
+        // Class references for the map reconstruction from the save file
+        KeyFrameDatabase *mpKeyFrameDB;
+        ORBVocabulary *mpORBVocabulary;
 
-    // Mutex
-    std::mutex mMutexAtlas;
+        // Mutex
+        std::mutex mMutexAtlas;
 
 
-}; // class Atlas
+    };// class Atlas
 
-} // namespace ORB_SLAM3
+}// namespace ORB_SLAM3
 
-#endif // ATLAS_H
+#endif// ATLAS_H

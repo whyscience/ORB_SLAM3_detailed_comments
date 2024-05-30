@@ -20,84 +20,82 @@
 #ifndef KEYFRAMEDATABASE_H
 #define KEYFRAMEDATABASE_H
 
-#include <vector>
 #include <list>
 #include <set>
+#include <vector>
 
-#include "KeyFrame.h"
 #include "Frame.h"
-#include "ORBVocabulary.h"
+#include "KeyFrame.h"
 #include "Map.h"
+#include "ORBVocabulary.h"
 
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/vector.hpp>
 #include <boost/serialization/list.hpp>
+#include <boost/serialization/vector.hpp>
 
-#include<mutex>
+#include <mutex>
 
 
 namespace ORB_SLAM3
 {
 
-class KeyFrame;
-class Frame;
-class Map;
+    class KeyFrame;
+    class Frame;
+    class Map;
 
 
-class KeyFrameDatabase
-{
-    friend class boost::serialization::access;
-
-    template<class Archive>
-    void serialize(Archive& ar, const unsigned int version)
+    class KeyFrameDatabase
     {
-        ar & mvBackupInvertedFileId;
-    }
+        friend class boost::serialization::access;
 
-public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+        template<class Archive>
+        void serialize(Archive &ar, const unsigned int version)
+        {
+            ar & mvBackupInvertedFileId;
+        }
 
-    KeyFrameDatabase(){}
-    KeyFrameDatabase(const ORBVocabulary &voc);
+    public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    void add(KeyFrame* pKF);
+        KeyFrameDatabase() {}
+        KeyFrameDatabase(const ORBVocabulary &voc);
 
-    void erase(KeyFrame* pKF);
+        void add(KeyFrame *pKF);
 
-    void clear();
-    void clearMap(Map* pMap);
+        void erase(KeyFrame *pKF);
 
-    // Loop Detection(DEPRECATED)
-    std::vector<KeyFrame *> DetectLoopCandidates(KeyFrame* pKF, float minScore);
+        void clear();
+        void clearMap(Map *pMap);
 
-    // Loop and Merge Detection
-    void DetectCandidates(KeyFrame* pKF, float minScore,vector<KeyFrame*>& vpLoopCand, vector<KeyFrame*>& vpMergeCand);
-    void DetectBestCandidates(KeyFrame *pKF, vector<KeyFrame*> &vpLoopCand, vector<KeyFrame*> &vpMergeCand, int nMinWords);
-    void DetectNBestCandidates(KeyFrame *pKF, vector<KeyFrame*> &vpLoopCand, vector<KeyFrame*> &vpMergeCand, int nNumCandidates);
+        // Loop Detection(DEPRECATED)
+        std::vector<KeyFrame *> DetectLoopCandidates(KeyFrame *pKF, float minScore);
 
-    // Relocalization
-    std::vector<KeyFrame*> DetectRelocalizationCandidates(Frame* F, Map* pMap);
+        // Loop and Merge Detection
+        void DetectCandidates(KeyFrame *pKF, float minScore, vector<KeyFrame *> &vpLoopCand, vector<KeyFrame *> &vpMergeCand);
+        void DetectBestCandidates(KeyFrame *pKF, vector<KeyFrame *> &vpLoopCand, vector<KeyFrame *> &vpMergeCand, int nMinWords);
+        void DetectNBestCandidates(KeyFrame *pKF, vector<KeyFrame *> &vpLoopCand, vector<KeyFrame *> &vpMergeCand, int nNumCandidates);
 
-    void PreSave();
-    void PostLoad(map<long unsigned int, KeyFrame*> mpKFid);
-    void SetORBVocabulary(ORBVocabulary* pORBVoc);
+        // Relocalization
+        std::vector<KeyFrame *> DetectRelocalizationCandidates(Frame *F, Map *pMap);
 
-protected:
+        void PreSave();
+        void PostLoad(map<long unsigned int, KeyFrame *> mpKFid);
+        void SetORBVocabulary(ORBVocabulary *pORBVoc);
 
-   // Associated vocabulary
-   const ORBVocabulary* mpVoc;
+    protected:
+        // Associated vocabulary
+        const ORBVocabulary *mpVoc;
 
-   // Inverted file
-   std::vector<list<KeyFrame*> > mvInvertedFile;
+        // Inverted file
+        std::vector<list<KeyFrame *>> mvInvertedFile;
 
-   // For save relation without pointer, this is necessary for save/load function
-   std::vector<list<long unsigned int> > mvBackupInvertedFileId;
+        // For save relation without pointer, this is necessary for save/load function
+        std::vector<list<long unsigned int>> mvBackupInvertedFileId;
 
-   // Mutex
-   std::mutex mMutex;
+        // Mutex
+        std::mutex mMutex;
+    };
 
-};
-
-} //namespace ORB_SLAM
+}// namespace ORB_SLAM3
 
 #endif
